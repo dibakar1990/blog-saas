@@ -47,9 +47,10 @@
                             <p>
                                 Lorem ipsum dolor sit amet, consectetur adipiscing elit. Vivamus sed porta dui. Class aptent taciti sociosqu ad litora torquent per conubia nostra inceptos
                             </p>
-                            <form>
-                                <input class="form-control" type="email" placeholder="Your email here">
-                                <button class="btn">Submit</button>
+                            <form @submit.prevent="submit">
+                                <input class="form-control" type="email" v-model="form.sub_email" placeholder="Your email here">
+                                <span v-if="form.errors.sub_email" class="invalid-feedback">{{ form.errors.sub_email[0] }}</span>
+                                <button class="btn" :disabled="form.processing" type="submit">Submit</button>
                             </form>
                         </div>
                     </div>
@@ -75,6 +76,19 @@
 </template>
 
 <script setup>
-    import { Link, usePage} from '@inertiajs/vue3';
+    import { Link, usePage, useForm} from '@inertiajs/vue3';
     const { categories, socialLinks, setting } = usePage().props
+    const form = useForm({
+    sub_email: ''
+  })
+  const submit = () => {
+    form.post('/subscribe-email',{
+        onSuccess: () => {
+            form.reset()
+        },
+        onError: (errors) => {
+            console.log('Validation Errors:', errors)
+        }
+    })
+  }
 </script>

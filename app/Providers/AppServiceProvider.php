@@ -27,6 +27,17 @@ class AppServiceProvider extends ServiceProvider
             'setting' => fn () => CommonHelper::getSetting(),
             'categories' => fn () => CommonHelper::getCategories(),
             'tags' => fn () => CommonHelper::getTags(),
+            'flash' => fn () => [
+                'success' => session('success'),
+                'error' => session('error'),
+            ],
+            'errors' => function () {
+                $errors = session()->get('errors');
+
+                return $errors
+                    ? $errors->getBag('default')->getMessages()
+                    : (object) [];
+            },
         ]);
     }
 }

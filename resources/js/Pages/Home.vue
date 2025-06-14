@@ -183,7 +183,6 @@
     const filteredLatestNews =  props.data.latestNews.slice(1);
     const popularFirstNews = props.data.topNews[0];
     const filteredPopularNews =  props.data.topNews.slice(1);
-    console.log(popularFirstNews);
     const appName = setting.app_name || 'Blog-Saas'
     const pageTitle = `${appName} | Home`
    

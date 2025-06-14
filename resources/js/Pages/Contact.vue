@@ -13,24 +13,24 @@
                 <div class="row align-items-center">
                     <div class="col-md-4">
                         <div class="form">
-                            <form @submit.prevent="submit">
+                            <form @submit.prevent="formSubmit">
                                 <div class="form-row">
                                     <div class="form-group col-md-6">
                                         <input type="text" class="form-control" v-model="form.name" placeholder="Your Name" />
-                                        <span class="invalid-feedback">{{ form.errors.name }}</span>
+                                        <span v-if="form.errors.name" class="invalid-feedback">{{ form.errors.name[0] }}</span>
                                     </div>
                                     <div class="form-group col-md-6">
                                         <input type="email" class="form-control" v-model="form.email" placeholder="Your Email" />
-                                        <span class="invalid-feedback">{{ form.errors.email }}</span>
+                                        <span v-if="form.errors.email" class="invalid-feedback">{{ form.errors.email[0] }}</span>
                                     </div>
                                 </div>
                                 <div class="form-group">
                                     <input type="text" class="form-control" v-model="form.subject" placeholder="Subject" />
-                                    <span class="invalid-feedback">{{ form.errors.subject }}</span>
+                                    <span v-if="form.errors.subject" class="invalid-feedback">{{ form.errors.subject[0] }}</span>
                                 </div>
                                 <div class="form-group">
                                     <textarea class="form-control" rows="5" v-model="form.message" placeholder="Message"></textarea>
-                                     <span class="invalid-feedback">{{ form.errors.message }}</span>
+                                     <span v-if="form.errors.message" class="invalid-feedback">{{ form.errors.message[0] }}</span>
                                 </div>
                                 <div><button class="btn" type="submit" :disabled="form.processing">Send Message</button></div>
                             </form>
@@ -63,7 +63,7 @@
 </template>
 
 <script setup>
-  import { Link, Head, usePage, useForm} from '@inertiajs/vue3';
+  import { Head, usePage, useForm} from '@inertiajs/vue3'
   import Layout from '@/Layouts/MainLayout.vue';
   const { setting, socialLinks } = usePage().props
   defineOptions({
@@ -76,8 +76,15 @@
     subject: '',
     message: ''
   })
-  const submit = () => {
-    form.post('/contact-store')
+  const formSubmit = () => {
+    form.post('/contact-store',{
+        onSuccess: () => {
+            form.reset()
+        },
+        onError: (errors) => {
+            console.log('Validation Errors:', errors)
+        }
+    })
   }
   const appName = setting.app_name || 'Blog-Saas'
   const pageTitle = `${appName} | Contact-Us`
