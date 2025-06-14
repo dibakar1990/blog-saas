@@ -9,7 +9,6 @@ use App\Models\Newsletter;
 use App\Models\User;
 use App\Notifications\EmailSubscribe;
 use App\Notifications\SendMessage;
-use Illuminate\Http\Request;
 use Inertia\Inertia;
 use Inertia\Response;
 
@@ -38,7 +37,7 @@ class ContactController extends Controller
             $contact->subject = $request->input('subject');
             $contact->message = $request->input('message');
             $contact->save();
-            
+
             $admin = User::whereIn('role', ['super-admin'])->first();
             $admin->notify(new SendMessage($contact));
         }
