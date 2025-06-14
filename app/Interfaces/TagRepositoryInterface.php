@@ -11,4 +11,5 @@ interface TagRepositoryInterface
     public function update($data, string $id):bool;
     public function status($data):bool;
     public function destroy(string $id):bool;
+    public function getTagId($slug);
 }

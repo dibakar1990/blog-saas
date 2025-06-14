@@ -1,4 +1,5 @@
 <template>
+    <Head :title="pageTitle" />
     <div class="top-news">
       <div class="container-fluid">
             <div class="row">
@@ -10,8 +11,8 @@
                                 <div class="tn-content">
                                     <div class="tn-content-inner">
                                         <h5 style="color: #fff;">{{ entry.category.name }}</h5>
-                                        <Link class="tn-date" :href="`/news/${entry.slug}`"><i class="far fa-clock"></i>{{ entry.post_date }}</Link>
-                                        <Link class="tn-title" :href="`/news/${entry.slug}`">{{ entry.title }}</Link>
+                                        <Link class="tn-date" :href="`/news-deatils/${entry.slug}`"><i class="far fa-clock"></i>{{ entry.post_date }}</Link>
+                                        <Link class="tn-title" :href="`/news-details/${entry.slug}`">{{ entry.title }}</Link>
                                     </div>
                                 </div>
                             </div>
@@ -33,7 +34,7 @@
                               <ul class="fa-ul">
                                   <li v-for="category in categories" :key="category.id">
                                     <span class="fa-li"><i class="far fa-arrow-alt-circle-right"></i></span>
-                                    <Link :href="category.slug">{{ category.name }}</Link></li>
+                                    <Link :href="`/news/${category.slug}`">{{ category.name }}</Link></li>
                                   
                               </ul>
                           </div>
@@ -42,7 +43,7 @@
                       <div class="sidebar-widget">
                           <h2><i class="fas fa-align-justify"></i>Tags</h2>
                           <div class="tags">
-                              <Link v-for="tag in tags" :key="tag.id" :href="`/${tag.slug}?type=${'tag'}`">{{ tag.name }}</Link>
+                              <Link v-for="tag in tags" :key="tag.id" :href="`/news/${tag.slug}?type=${'tag'}`">{{ tag.name }}</Link>
                               
                           </div>
                       </div>
@@ -75,7 +76,7 @@
 </template>
 
 <script setup>
-    const { news, categories, tags } = usePage().props
+    const { news, categories, tags, setting } = usePage().props
     defineOptions({
         layout: Layout
     })
@@ -83,9 +84,10 @@
         news: Object,
         tags: Object
     });
-    console.log(tags);
+    const appName = setting.app_name || 'Blog-Saas'
+    const pageTitle = `${appName} | News`
     import Layout from '@/Layouts/MainLayout.vue';
-    import { Link, usePage} from '@inertiajs/vue3';
+    import { Link, Head, usePage} from '@inertiajs/vue3';
     import pagination from '@/Components/Pagination.vue';
     
 </script>

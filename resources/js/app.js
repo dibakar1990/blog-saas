@@ -1,5 +1,5 @@
 import { createApp, h } from 'vue';
-import { createInertiaApp } from '@inertiajs/vue3';
+import { createInertiaApp, Head } from '@inertiajs/vue3';
 import { resolvePageComponent } from 'laravel-vite-plugin/inertia-helpers';
 import '../assets/lib/slick/slick.css';
 import '../assets/lib/slick/slick-theme.css';
@@ -9,6 +9,7 @@ import '../assets/lib/slick/slick.min.js';
 import '../assets/js/main.js';
 
 createInertiaApp({
+    title: title => `${title}`,
     resolve: name =>
         resolvePageComponent(`./Pages/${name}.vue`, import.meta.glob('./Pages/**/*.vue')),
     setup({ el, App, props, plugin }) {

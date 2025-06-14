@@ -1,24 +1,17 @@
 <template>
+    <Head :title="pageTitle" />
   <Breadcrumb :home="props.breadcrumb.home" :news="props.breadcrumb.news" :active="props.breadcrumb.active" :previousUrl="props.breadcrumb.previousUrl"/>
    <div class="single-news">
       <div class="container-fluid">
           <div class="row">
               <div class="col-md-8">
                   <div class="sn-img">
-                      <img :src="'/assets/img/top-news-1.jpg'" />
+                      <img :src="news.file_path_url" />
                   </div>
                   <div class="sn-content">
-                      <a class="sn-title" href="">Lorem ipsum dolor sit amet</a>
-                      <a class="sn-date" href=""><i class="far fa-clock"></i>05-Feb-2020</a>
-                      <p>
-                          Lorem ipsum dolor sit amet, consectetur adipiscing elit. Curabitur tristique dictum tincidunt. Nam rhoncus sem vitae orci blandit, quis fermentum justo laoreet. Fusce vestibulum orci vitae luctus tincidunt. Maecenas eros elit, scelerisque at justo eget, consectetur semper turpis. Proin pulvinar lorem eu sapien fermentum, sed finibus augue convallis. Aliquam ultrices porta gravida. Vestibulum nec libero sit amet enim consequat facilisis. Orci varius natoque penatibus et magnis dis parturient montes, nascetur ridiculus mus. Cras facilisis massa eget suscipit venenatis. Suspendisse et molestie diam. Vestibulum in massa dapibus, blandit nibh ut, feugiat leo.
-                      </p>
-                      <p>
-                          Nulla consectetur risus libero. Donec mattis tortor justo, ac egestas purus condimentum in. Etiam viverra nec metus quis egestas. Nulla commodo, lectus nec dictum malesuada, tortor tellus consequat nisi, sit amet dictum erat tellus in libero. In dignissim lectus quis elit posuere, sit amet tempor nisi iaculis. Curabitur eget ante in libero laoreet finibus nec et libero. In hac habitasse platea dictumst. Morbi tincidunt ex non odio auctor tristique. Nulla facilisi. Maecenas ullamcorper, felis eget interdum semper, mi ipsum auctor magna, ut ullamcorper leo metus vitae ex. Curabitur eu tempor elit. Phasellus blandit elit fringilla, ultricies ligula sed, pretium ligula. Duis condimentum elementum orci, pulvinar mattis elit luctus at. Vestibulum lacinia porttitor urna, eget aliquet justo porta sed. Cras pulvinar euismod consectetur. Vestibulum quis nisi non erat feugiat viverra. 
-                      </p>
-                      <p>
-                          Aliquam eleifend pharetra nunc, et finibus felis tristique nec. Ut mattis nisi ante, vel varius ipsum consectetur sit amet. Donec sed eros at magna sollicitudin molestie. Cras quis malesuada felis. Maecenas sodales nunc sit amet lobortis iaculis. Etiam eget consectetur sem, et aliquet justo. Curabitur at viverra lacus, eget feugiat erat. Fusce lacinia faucibus diam ut vestibulum. Vestibulum nisi sem, lacinia ullamcorper iaculis a, finibus eget mauris. Vestibulum elementum quam quam, sit amet condimentum odio luctus at. Aenean dictum nec nisi vitae hendrerit. Nulla facilisi. 
-                      </p>
+                      <a class="sn-title" href="javascript:void(0)">{{ news.title }}</a>
+                      <a class="sn-date" href=""><i class="far fa-clock"></i>{{ news.post_date }}</a>
+                      <div v-html="formattedContent" />
                   </div>
               </div>
 
@@ -38,20 +31,7 @@
                       <div class="sidebar-widget">
                           <h2><i class="fas fa-align-justify"></i>Tags</h2>
                           <div class="tags">
-                              <a href="">National</a>
-                              <a href="">International</a>
-                              <a href="">Economics</a>
-                              <a href="">Politics</a>
-                              <a href="">Lifestyle</a>
-                              <a href="">Technology</a>
-                              <a href="">Trades</a>
-                              <a href="">National</a>
-                              <a href="">International</a>
-                              <a href="">Economics</a>
-                              <a href="">Politics</a>
-                              <a href="">Lifestyle</a>
-                              <a href="">Technology</a>
-                              <a href="">Trades</a>
+                              <Link v-for="tag in tags" :key="tag.id" :href="`/news/${tag.slug}?type=${'tag'}`">{{ tag.name }}</Link>
                           </div>
                       </div>
 
@@ -83,16 +63,21 @@
 </template>
 
 <script setup>
+    const { news, categories, tags, setting } = usePage().props
+    import { Link, usePage, Head } from '@inertiajs/vue3';
+    import Breadcrumb from '@/Components/Breadcrumb.vue';
+    import Layout from '@/Layouts/MainLayout.vue';
     defineOptions({
     layout: Layout
     })
     const props = defineProps({
         breadcrumb: Object,
+        news: Object
     });
+    const appName = setting.app_name || 'Blog-Saas'
+    const pageTitle = `${appName} | News Details`
+    const formattedContent = news.description.replace(/\n/g, '<br>')
     
-    const { categories } = usePage().props
-    console.log(categories);
-    import { Link, usePage } from '@inertiajs/vue3';
-    import Breadcrumb from '@/Components/Breadcrumb.vue';
-    import Layout from '@/Layouts/MainLayout.vue';
+    console.log(news);
+    
 </script>

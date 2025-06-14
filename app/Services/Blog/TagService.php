@@ -48,4 +48,9 @@ class TagService
     {
         return $this->tagRepository->status($request);
     }
+
+    public function getTagID($slug)
+    {
+        return $this->tagRepository->getTagId($slug);
+    }
 }

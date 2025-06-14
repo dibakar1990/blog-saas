@@ -23,6 +23,11 @@ class BlogService
         return $this->blogRepository->getNews();
     }
 
+    public function getHeadNews()
+    {
+        return $this->blogRepository->headNews();
+    }
+
     public function newsStore($request)
     {
         return $this->blogRepository->store($request);
@@ -56,5 +61,35 @@ class BlogService
     public function getActiveNews()
     {
         return $this->blogRepository->getAllActiveNews();
+    }
+
+    public function getBlogTagWithBlogID($tagID)
+    {
+        return $this->blogRepository->getBlogID($tagID);
+    }
+
+    public function getTagWiseBlog($blogIds)
+    {
+        return $this->blogRepository->getTagBlog($blogIds);
+    }
+
+    public function getBlogWithSlug($slug)
+    {
+        return $this->blogRepository->getBlogSlug($slug);
+    }
+
+    public function getCategoryBlogs()
+    {
+        return $this->blogRepository->getCatBlogs();
+    }
+
+    public function getLatestNews()
+    {
+        return $this->blogRepository->latestNews();
+    }
+
+    public function getTopNews()
+    {
+        return $this->blogRepository->topNews();
     }
 }

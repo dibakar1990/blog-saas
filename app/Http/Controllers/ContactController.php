@@ -14,4 +14,13 @@ class ContactController extends Controller
         return Inertia::render('Contact');
     }
 
+    public function store(Request $request)
+    {
+         $validated = $request->validate([
+            'name'  => 'required|string|max:255',
+            'email' => 'required|email',
+        ]);
+        dd($request->all());
+    }
+
 }

@@ -19,6 +19,7 @@ return new class extends Migration
             $table->string('phone')->nullable();
             $table->string('file_path')->nullable();
             $table->string('fav_icon')->nullable();
+            $table->text('description')->nullable();
             $table->timestamps();
         });
     }

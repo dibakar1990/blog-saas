@@ -18,5 +18,10 @@ class Category extends Model
         'menu_item_set',
         'order_by'
     ];
+
+    public function blogs()
+    {
+        return $this->hasMany(Blog::class);
+    }
     
 }

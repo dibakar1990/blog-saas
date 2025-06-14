@@ -120,4 +120,10 @@ class TagRepository implements TagRepositoryInterface
         $tag->save();
         return true;
     }
+
+    public function getTagId($slug)
+    {
+        $tag = Tag::where('slug',$slug)->where('status',1)->value('id');
+        return $tag;
+    }
 }

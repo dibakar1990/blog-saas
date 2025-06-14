@@ -5,6 +5,7 @@ namespace App\Repositories;
 use App\Interfaces\BlogRepositoryInterface;
 use App\Models\Blog;
 use App\Models\BlogTag;
+use App\Models\Category;
 use App\Services\FileUpload\FileUploadService;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\Cache;
@@ -19,6 +20,8 @@ class BlogRepository implements BlogRepositoryInterface
      */
     public function __construct(
         private Blog $model,
+        private BlogTag $blogTag_model,
+        private Category $category_model,
         private BlogTag $blogTagModel,
         private FileUploadService $fileUpload
     ){ }
@@ -121,17 +124,21 @@ class BlogRepository implements BlogRepositoryInterface
         ->make(true);
     }
 
-    public function getNews():array
+    public function getNews()
     {
-        $news = Cache::remember('news', 60, function () {
-            return $this->model::latest()->get();
-        });
+        $news = $this->model::where('status',1)->latest()->get();
+        return $news;
+    }
+
+    public function headNews()
+    {
+        $news = $this->model::where('status',1)->latest()->limit(5)->get();
         return $news;
     }
 
     public function store($data):bool
     {
-        
+        //dd($adta);
         $tags = $data['tags'];
         if(isset($data['latest_news'])){
             $latest_news = $data['latest_news'];
@@ -184,18 +191,7 @@ class BlogRepository implements BlogRepositoryInterface
     {
         $news = $this->model::find($id);
         $tags = $data['tags'];
-        if(isset($data['latest_news'])){
-            $latest_news = $data['latest_news'];
-        }else{
-            $latest_news = 0;
-        }
-
-        if(isset($data['popular_news'])){
-            $popular_news = $data['popular_news'];
-        }else{
-            $popular_news = 0;
-        }
-
+        
         if (!empty($data['file'])) {
             if($news->file_path !='') {
                 if(Storage::exists($news->file_path)){
@@ -211,8 +207,8 @@ class BlogRepository implements BlogRepositoryInterface
 
         $news->title = $data['news_title'];
         $news->category_id = $data['category'];
-        $news->popular_news = $popular_news;
-        $news->latest_news = $latest_news;
+        $news->popular_news = $data['popular_news'];
+        $news->latest_news = $data['latest_news'];
         $news->description = $data['description'];
         $news->file_path = $file_path;
         $news->save();
@@ -252,7 +248,7 @@ class BlogRepository implements BlogRepositoryInterface
 
     public function getCategoryNews($categoryId)
     {
-        $blogs = $this->model::where('category_id',$categoryId)
+        $blogs = $this->model::with('category')->where('category_id',$categoryId)
                 ->where('status',1)->latest()->paginate(10)->withQueryString();
         return $blogs;
     }
@@ -263,5 +259,45 @@ class BlogRepository implements BlogRepositoryInterface
         $blogs = $this->model::with('category')->where('status',1)->latest()->paginate(10)->withQueryString();
         
         return $blogs;
+    }
+
+    public function getBlogID($tagID)
+    {
+        return $this->blogTag_model::where('tag_id',$tagID)->pluck('blog_id');
+    }
+
+    public function getTagBlog($blogIds)
+    {
+        $news = $this->model::with('category')->whereIn('id',$blogIds)->where('status',1)->latest()->paginate(10)->withQueryString();
+        return $news;
+    }
+
+    public function getBlogSlug($slug)
+    {
+        $news = $this->model::where('slug',$slug)->where('status',1)->first();
+        return $news;
+    }
+
+    public function getCatBlogs()
+    {
+        $categoryBlog = $this->category_model::with(['blogs' => function ($query) {
+            $query->where('status', 1);
+        }])
+        ->where(['status' => 1,'menu_item_set' => 1])
+        ->whereHas('blogs')
+        ->orderBy('order_by','asc')->get();
+        return $categoryBlog;
+    }
+
+    public function latestNews()
+    {
+        $news = $this->model::where(['status' => 1, 'latest_news' => 1])->latest()->limit(6)->get();
+        return $news;
+    }
+
+    public function topNews()
+    {
+        $news = $this->model::where(['status' => 1, 'popular_news' => 1])->latest()->limit(6)->get();
+        return $news;
     }
 }

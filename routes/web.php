@@ -24,9 +24,10 @@ use Illuminate\Support\Facades\Route;
 Route::get('/', [HomeController::class, 'index']);
 Route::get('/about-us', [PageController::class, 'about']);
 Route::get('/contact-us', [ContactController::class, 'index']);
+Route::post('/contact-store', [ContactController::class, 'store']);
 Route::get('/news', [NewsController::class, 'index'])->name('news.index');
-Route::get('/{slug}', [NewsController::class, 'category_news']);
-Route::get('/news/{slug}', [NewsController::class, 'show']);
+Route::get('/news/{slug}', [NewsController::class, 'category_news']);
+Route::get('/news-details/{slug}', [NewsController::class, 'show']);
 
 Auth::routes(['register' => false]);
 

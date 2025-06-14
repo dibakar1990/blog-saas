@@ -39,7 +39,7 @@
                     <div class="navbar-nav m-auto">
                         <Link href="/" class="nav-item nav-link" :class="{ 'active': isActive('/') }">Home</Link>
                         <Link v-for="category in menuCategories" :key="category.id" 
-                            :href="category.slug" class="nav-item nav-link">{{ category.name }}</Link>
+                            :href="`/news/${category.slug}`" class="nav-item nav-link">{{ category.name }}</Link>
                         <Link href="/news" class="nav-item nav-link" :class="{ 'active': isActive('/news') }">News</Link>
                         <Link href="/contact-us" class="nav-item nav-link" :class="{ 'active': isActive('/contact-us') }">Contact Us</Link>
                     </div>
