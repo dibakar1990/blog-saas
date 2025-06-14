@@ -38,6 +38,7 @@ class ContactController extends Controller
             $contact->subject = $request->input('subject');
             $contact->message = $request->input('message');
             $contact->save();
+            
             $admin = User::whereIn('role', ['super-admin'])->first();
             $admin->notify(new SendMessage($contact));
         }
